@@ -2,11 +2,10 @@ import { createFeatureSelector, createSelector } from '@ngrx/store';
 
 import {
   PHONES_FEATURE_KEY,
-  PhonesAdapter,
+  phonesAdapter,
   PhonesPartialState,
   PhonesState
 } from './phones.reducer';
-import { stat } from 'fs';
 
 export const selectPhonesState = createFeatureSelector<
   PhonesPartialState,
@@ -36,7 +35,7 @@ export const selectPhoneId = createSelector(
 );
 
 export const selectPhone = createSelector(
-  selectPhoneEntities,
+  selectPhonesEntities,
   selectPhoneId,
-  (entities, selectedId) => selectedId && entities(selectedId)
+  (entities, selectedId) => selectedId && entities[selectedId]
 );

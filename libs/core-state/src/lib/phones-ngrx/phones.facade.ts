@@ -36,9 +36,9 @@ export class PhonesFacade {
     this.dispatch(phonesActions.loadPhones());
   }
 
-  loadPhone(phoneId: string) {
-    this.dispatch(phonesActions.loadPhone({ phoneId }));
-  }
+  // loadPhone(phoneId: string) {
+  //   this.dispatch(phonesActions.loadPhone({ phoneId }));
+  // }
 
   createPhone(phone: Phone) {
     this.dispatch(phonesActions.createPhone({ phone }));

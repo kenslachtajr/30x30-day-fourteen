@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
+
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { DataPersistence } from '@nrwl/angular';
 import { map, tap } from 'rxjs/operators';
 
-import * as phoneActions from './phones.actions';
+import * as phonesActions from './phones.actions';
 import { Phone, PhoneService, NotifyService } from '@ngrx-phones/core-data';
 import { PhonesPartialState } from './phones.reducer';
 
@@ -15,11 +16,9 @@ export class PhonesEffect {
         action: ReturnType<typeof phonesActions.loadPhones>,
         state: PhonesPartialState
       ) => {
-        return this.phonesService
-          .all()
-          .pipe(
-            map((phones: Phone[]) => phonesActions.phonesLoaded({ phones }))
-          );
+        return this.phoneService.all().pipe(
+          map((phones: Phone[]) => phonesActions.phonesLoaded({ phones }))
+        );
       },
       onError: (action: ReturnType<typeof phonesActions.loadPhones>, error) => {
         this.notify.notification('Effect Error:', error);
@@ -27,27 +26,27 @@ export class PhonesEffect {
     })
   );
 
-  loadPhone$ = createEffect(() =>
-    this.dataPersistence.fetch(phonesActions.loadPhone, {
-      run: (
-        action: ReturnType<typeof phonesActions.loadPhone>,
-        state: PhonesPartialState
-      ) => {
-        return this.phonesService
-          .findOne(action.phoneId)
-          .pipe(map((phone: Phone) => phonesActions.phoneLoaded({ phone })));
-      },
-      onError: (action: ReturnType<typeof phonesActions.loadPhone>, error) => {
-        this.notify.notification('Effect Error', error);
-      }
-    })
-  );
+  // loadPhone$ = createEffect(() =>
+  //   this.dataPersistence.fetch(phonesActions.loadPhone, {
+  //     run: (
+  //       action: ReturnType<typeof phonesActions.loadPhone>,
+  //       state: PhonesPartialState
+  //     ) => {
+  //       return this.phoneService
+  //         .findOne(action.phoneId)
+  //         .pipe(map((phone: Phone) => phonesActions.phoneLoaded({ phone })));
+  //     },
+  //     onError: (action: ReturnType<typeof phonesActions.loadPhone>, error) => {
+  //       this.notify.notification('Effect Error', error);
+  //     }
+  //   })
+  // );
 
-  selectPhoneOnLoad$ = createEffect(() =>
-    this.dataPersistence.actions.pipe(
-      ofType(phonesActions.phoneLoaded),
-      map(({ phone }) => phonesActions.phonerSelected({ selectedPhoneId: phone.id }))
-    ))
+  // selectPhoneOnLoad$ = createEffect(() =>
+  //   this.dataPersistence.actions.pipe(
+  //     ofType(phonesActions.phoneLoaded),
+  //     map(({ phone }) => phonesActions.phonerSelected({ selectedPhoneId: phone.id }))
+  //   ))
 
   createPhone$ = createEffect(() =>
     this.dataPersistence.pessimisticUpdate(phonesActions.createPhone, {
@@ -55,7 +54,7 @@ export class PhonesEffect {
         action: ReturnType<typeof phonesActions.createPhone>,
         state: PhonesPartialState
       ) => {
-        return this.phonesService
+        return this.phoneService
           .create(action.phone)
           .pipe(map((phone: Phone) => phonesActions.phoneCreated({ phone })));
       },
@@ -74,11 +73,10 @@ export class PhonesEffect {
         action: ReturnType<typeof phonesActions.updatePhone>,
         state: PhonesPartialState
       ) => {
-        return this.phonesService
-          .update(action.phone)
-          .pipe(map((phone: Phone) => phonesActions.phoneUpdated({ phone })),
-          tap(() => this.phonesService.all())
-          );
+        return this.phoneService.update(action.phone).pipe(
+          map((phone: Phone) => phonesActions.phoneUpdated({ phone })),
+          tap(() => this.phoneService.all())
+        );
       },
       onError: (
         action: ReturnType<typeof phonesActions.updatePhone>,
@@ -90,25 +88,28 @@ export class PhonesEffect {
   );
 
   deletePhone$ = createEffect(() =>
-  this.dataPersistence.pessimisticUpdate(phonesActions.deletePhone, {
-    run: (
-      action: ReturnType<typeof phonesActions.deletePhone>,
-      state: PhonesPartialState
-    ) => {
-      return this.phonesService.delete(action.phone).pipe(
-        map(() => phonesActions.phoneDelete({ phone: action.phone}))
-      );
-    },
-    onError: (action: ReturnType<typeof phonesActions.deleteComputer>, error) => {
-      this.notify.notification('Effect delete Error: ', error);
-    }
-  })
+    this.dataPersistence.pessimisticUpdate(phonesActions.deletePhone, {
+      run: (
+        action: ReturnType<typeof phonesActions.deletePhone>,
+        state: PhonesPartialState
+      ) => {
+        return this.phoneService
+          .delete(action.phone)
+          .pipe(map(() => phonesActions.phoneDeleted({ phone: action.phone })));
+      },
+      onError: (
+        action: ReturnType<typeof phonesActions.deletePhone>,
+        error
+      ) => {
+        this.notify.notification('Effect delete Error: ', error);
+      }
+    })
   );
 
   constructor(
     private actions$: Actions,
     private dataPersistence: DataPersistence<PhonesPartialState>,
-    private phonesService: PhoneService,
+    private phoneService: PhoneService,
     private notify: NotifyService
   ) {}
 }

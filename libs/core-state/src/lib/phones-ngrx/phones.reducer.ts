@@ -27,7 +27,8 @@ const phonesReducer = createReducer(
   on(phonesActions.phoneSelected, (state, { selectedPhoneId }) =>
     Object.assign({}, state, { selectedPhoneId })
   ),
-  on(phonesActions.phonesLoaded, (state, { phones }) =>
+  on(
+    phonesActions.phonesLoaded, (state, { phones }) =>
     phonesAdapter.addAll(phones, { ...state, isLoading: false })
   ),
   on(phonesActions.phoneCreated, (state, { phone }) =>
@@ -41,7 +42,7 @@ const phonesReducer = createReducer(
   ),
   on(
     phonesActions.loadPhones,
-    phonesActions.loadPhone,
+    // phonesActions.loadPhone,
     phonesActions.createPhone,
     phonesActions.updatePhone,
     phonesActions.deletePhone,

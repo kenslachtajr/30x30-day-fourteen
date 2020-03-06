@@ -10,18 +10,18 @@ export const loadPhones = createAction('[PHONE] Load Phones');
 
 export const phonesLoaded = createAction(
   '[PHONE] Phones Loaded',
-  props<{ phoneId: string }>()
+  props<{ phones: Phone[] }>()
 );
 
-export const loadPhone = createAction(
-  '[PHONE] Load Phone',
-  props<{ phoneId: string }>()
-);
+// export const loadPhone = createAction(
+//   '[PHONE] Load Phone',
+//   props<{ phoneId: string }>()
+// );
 
-export const phoneLoaded = createAction(
-  '[PHONE] Phone Loaded',
-  props<{phone:Phone}>()
-);
+// export const phoneLoaded = createAction(
+//   '[PHONE] Phone Loaded',
+//   props<{phone:Phone}>()
+// );
 
 export const createPhone = createAction(
   '[PHONE] Create Phone',

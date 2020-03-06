@@ -1,4 +1,4 @@
-import { ActionReducerMap } from '@ngrx-store';
+import { ActionReducerMap } from '@ngrx/store';
 import * as fromPhones from './phones-ngrx/phones.reducer';
 export interface AppState {
   phones: fromPhones.PhonesState;
