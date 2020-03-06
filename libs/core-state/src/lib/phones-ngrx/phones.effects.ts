@@ -5,7 +5,7 @@ import { DataPersistence } from '@nrwl/angular';
 import { map, tap } from 'rxjs/operators';
 
 import * as phonesActions from './phones.actions';
-import  { PhonesFacade} from './phones.facade';
+import { PhonesFacade } from './phones.facade';
 import { Phone, PhoneService, NotifyService } from '@ngrx-phones/core-data';
 import { PhonesPartialState } from './phones.reducer';
 
@@ -17,9 +17,11 @@ export class PhonesEffect {
         action: ReturnType<typeof phonesActions.loadPhones>,
         state: PhonesPartialState
       ) => {
-        return this.phoneService.all().pipe(
-          map((phones: Phone[]) => phonesActions.phonesLoaded({ phones }))
-        );
+        return this.phoneService
+          .all()
+          .pipe(
+            map((phones: Phone[]) => phonesActions.phonesLoaded({ phones }))
+          );
       },
       onError: (action: ReturnType<typeof phonesActions.loadPhones>, error) => {
         this.notify.notification('Effect Error:', error);
@@ -46,8 +48,11 @@ export class PhonesEffect {
   selectPhoneOnLoad$ = createEffect(() =>
     this.dataPersistence.actions.pipe(
       ofType(phonesActions.phoneLoaded),
-      map(({ phone }) => phonesActions.phoneSelected({ selectedPhoneId: phone.id }))
-    ))
+      map(({ phone }) =>
+        phonesActions.phoneSelected({ selectedPhoneId: phone.id })
+      )
+    )
+  );
 
   createPhone$ = createEffect(() =>
     this.dataPersistence.pessimisticUpdate(phonesActions.createPhone, {
@@ -55,12 +60,10 @@ export class PhonesEffect {
         action: ReturnType<typeof phonesActions.createPhone>,
         state: PhonesPartialState
       ) => {
-        return this.phoneService
-          .create(action.phone)
-          .pipe(
-            map((phone: Phone) => phonesActions.phoneCreated({ phone })),
-            tap(() => this.phonesFacade.loadPhones())
-          )
+        return this.phoneService.create(action.phone).pipe(
+          map((phone: Phone) => phonesActions.phoneCreated({ phone })),
+          tap(() => this.phonesFacade.loadPhones())
+        );
       },
       onError: (
         action: ReturnType<typeof phonesActions.createPhone>,
