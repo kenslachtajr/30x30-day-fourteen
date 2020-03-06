@@ -2,12 +2,12 @@
   <mat-card-header>
     <mat-card-title>
       <h1>
-        <span *ngIf="currentPhone.id; else elseBlock">{{originalTitle}}</span>
+        <span *ngIf="form.value.id; else elseBlock">{{originalTitle}}</span>
         <ng-template #elseBlock>Select a phone</ng-template>
       </h1>
     </mat-card-title>
   </mat-card-header>
-  <form [formGroup]="form" (submit)="saved.emit(currentPhone)">
+  <form [formGroup]="form" (submit)="saved.emit(form.value)">
     <mat-card-content>
       <mat-form-field class="full-width">
         <input matInput placeholder="brand" formControlName="brand" type="text" name="brand">
@@ -19,8 +19,8 @@
       </mat-form-field>
     </mat-card-content>
     <mat-card-actions>
-      <button type="submit" [disabled]="form.invalid" mat-button color="primary">{{currentPhone.id ? 'Save' : 'Create'}}</button>
-      <button type="button" mat-button (click)="cancelled.emit(currentPhone)">Cancel</button>
+      <button type="submit" [disabled]="form.invalid" mat-button color="primary">{{form.value.id ? 'Save' : 'Create'}}</button>
+      <button type="button" mat-button (click)="cancelled.emit(form.value)">Cancel</button>
     </mat-card-actions>
   </form>
 </mat-card>
