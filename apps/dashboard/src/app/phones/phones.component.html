@@ -1,1 +1,20 @@
-<p>phones works!</p>
+<div class="container">
+  <div class="col-50">
+    <ngrx-phones-phones-list
+      [phones]="phones$ | async"
+      (selected)="selectPhone($event)"
+      (deleted)="deletePhone($event)"
+    >
+    </ngrx-phones-phones-list>
+  </div>
+
+  <div class="col-50">
+    <ngrx-phones-phones-details
+      [form]="form"
+      [phone]="selectedPhone"
+      (saved)="savePhone($event)"
+      (cancelled)="resetPhone()"
+    >
+    </ngrx-phones-phones-details>
+  </div>
+</div>

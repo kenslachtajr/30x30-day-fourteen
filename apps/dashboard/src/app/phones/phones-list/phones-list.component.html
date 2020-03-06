@@ -1,1 +1,35 @@
-<p>phones-list works!</p>
+<mat-card>
+  <mat-card-header>
+    <mat-card-title>
+      <h1>Phones</h1>
+    </mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <mat-list>
+      <mat-list-item
+        *ngFor="let phone of phones"
+        (click)="selected.emit(phone)"
+      >
+        <h3 mat-line class="phone">
+          {{ phone.brand }}
+        </h3>
+        <p mat-line>
+          {{ phone.name }}
+        </p>
+        <button
+          mat-icon-button
+          (click)="deleted.emit(phone); $event.stopImmediatePropagation()"
+        >
+          <mat-icon>close</mat-icon>
+        </button>
+        <button
+          mat-icon-button
+          (click)="$event.stopImmediatePropagation()"
+          [routerLink]="phone.id"
+        >
+          <mat-icon>more_vert</mat-icon>
+        </button>
+      </mat-list-item>
+    </mat-list>
+  </mat-card-content>
+</mat-card>
