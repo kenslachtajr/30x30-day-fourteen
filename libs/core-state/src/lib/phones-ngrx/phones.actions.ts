@@ -13,15 +13,15 @@ export const phonesLoaded = createAction(
   props<{ phones: Phone[] }>()
 );
 
-// export const loadPhone = createAction(
-//   '[PHONE] Load Phone',
-//   props<{ phoneId: string }>()
-// );
+export const loadPhone = createAction(
+  '[PHONE] Load Phone',
+  props<{ phone: Phone }>()
+);
 
-// export const phoneLoaded = createAction(
-//   '[PHONE] Phone Loaded',
-//   props<{phone:Phone}>()
-// );
+export const phoneLoaded = createAction(
+  '[PHONE] Phone Loaded',
+  props<{phone:Phone}>()
+);
 
 export const createPhone = createAction(
   '[PHONE] Create Phone',

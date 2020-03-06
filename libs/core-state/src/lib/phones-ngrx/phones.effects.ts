@@ -5,6 +5,7 @@ import { DataPersistence } from '@nrwl/angular';
 import { map, tap } from 'rxjs/operators';
 
 import * as phonesActions from './phones.actions';
+import  { PhonesFacade} from './phones.facade';
 import { Phone, PhoneService, NotifyService } from '@ngrx-phones/core-data';
 import { PhonesPartialState } from './phones.reducer';
 
@@ -26,27 +27,27 @@ export class PhonesEffect {
     })
   );
 
-  // loadPhone$ = createEffect(() =>
-  //   this.dataPersistence.fetch(phonesActions.loadPhone, {
-  //     run: (
-  //       action: ReturnType<typeof phonesActions.loadPhone>,
-  //       state: PhonesPartialState
-  //     ) => {
-  //       return this.phoneService
-  //         .findOne(action.phoneId)
-  //         .pipe(map((phone: Phone) => phonesActions.phoneLoaded({ phone })));
-  //     },
-  //     onError: (action: ReturnType<typeof phonesActions.loadPhone>, error) => {
-  //       this.notify.notification('Effect Error', error);
-  //     }
-  //   })
-  // );
+  loadPhone$ = createEffect(() =>
+    this.dataPersistence.fetch(phonesActions.loadPhone, {
+      run: (
+        action: ReturnType<typeof phonesActions.loadPhone>,
+        state: PhonesPartialState
+      ) => {
+        return this.phoneService
+          .findOne(action.phone)
+          .pipe(map((phone: Phone) => phonesActions.phoneLoaded({ phone })));
+      },
+      onError: (action: ReturnType<typeof phonesActions.loadPhone>, error) => {
+        this.notify.notification('Effect Error', error);
+      }
+    })
+  );
 
-  // selectPhoneOnLoad$ = createEffect(() =>
-  //   this.dataPersistence.actions.pipe(
-  //     ofType(phonesActions.phoneLoaded),
-  //     map(({ phone }) => phonesActions.phonerSelected({ selectedPhoneId: phone.id }))
-  //   ))
+  selectPhoneOnLoad$ = createEffect(() =>
+    this.dataPersistence.actions.pipe(
+      ofType(phonesActions.phoneLoaded),
+      map(({ phone }) => phonesActions.phoneSelected({ selectedPhoneId: phone.id }))
+    ))
 
   createPhone$ = createEffect(() =>
     this.dataPersistence.pessimisticUpdate(phonesActions.createPhone, {
@@ -56,7 +57,10 @@ export class PhonesEffect {
       ) => {
         return this.phoneService
           .create(action.phone)
-          .pipe(map((phone: Phone) => phonesActions.phoneCreated({ phone })));
+          .pipe(
+            map((phone: Phone) => phonesActions.phoneCreated({ phone })),
+            tap(() => this.phonesFacade.loadPhones())
+          )
       },
       onError: (
         action: ReturnType<typeof phonesActions.createPhone>,
@@ -110,6 +114,7 @@ export class PhonesEffect {
     private actions$: Actions,
     private dataPersistence: DataPersistence<PhonesPartialState>,
     private phoneService: PhoneService,
+    private phonesFacade: PhonesFacade,
     private notify: NotifyService
   ) {}
 }
