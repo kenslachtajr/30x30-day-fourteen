@@ -15,7 +15,12 @@
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
-    "paths": {}
+    "paths": {
+      "@ngrx-phones/material": ["libs/material/src/index.ts"],
+      "@ngrx-phones/ui-library": ["libs/ui-library/src/index.ts"],
+      "@ngrx-phones/core-data": ["libs/core-data/src/index.ts"],
+      "@ngrx-phones/core-state": ["libs/core-state/src/index.ts"]
+    }
   },
   "exclude": ["node_modules", "tmp"]
 }
